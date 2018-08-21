@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-
+#!/usr/bin/env python
 import os, base64, time, sys
 from subprocess import call
 reciver_key_filename=''
