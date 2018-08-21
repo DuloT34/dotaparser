@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import requests, bs4, datetime
 
 s=requests.get('http://esportlivescore.com/g_dota.html')
