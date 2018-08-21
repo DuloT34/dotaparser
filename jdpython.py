@@ -1,7 +1,12 @@
 #!/usr/bin/python3
 import requests, bs4, datetime
 
-s=requests.get('http://esportlivescore.com/g_dota.html')
+try:
+    s = requests.get('http://esportlivescore.com/g_dota.html')
+    s.raise_for_status()
+except requests.exceptions.HTTPError as err:
+    print(err)
+    sys.exit(1)
 
 b=bs4.BeautifulSoup(s.text, "html.parser")
 
@@ -11,9 +16,9 @@ for tag in liveTag:
     notliveTags = tag.find_all("div", {"class": ["match-event event without-score is-not-live"]})
     for tag in notliveTags:
         timestamp = str(datetime.datetime.fromtimestamp(float((tag.find("span", {"class": ["hide phpunixtime"]})).text[0:10])))
-        gameformat = str(tag.find("div", {"class": ["event-tournament-info"]}).text)
+        gameformat = str(tag.find("div", {"class": ["event-tournament-info"]}).text.strip())
         teams = str(tag.find("div", {"class": ["team-home"]}).text.strip()) + " vs " + str(tag.find("div", {"class": ["team-away"]}).text.strip())
-        livematches.append(timestamp + gameformat + teams)
+        livematches.append(timestamp + '\t' + gameformat + '\t' + teams)
 str1 = '\n'.join(livematches)
 
 upcTag = b.find_all("div", {"id": "upcoming"})
@@ -22,9 +27,9 @@ for tag in upcTag:
     notliveTags = tag.find_all("div", {"class": ["match-event event without-score is-not-live"]})
     for tag in notliveTags:
         timestamp = str(datetime.datetime.fromtimestamp(float((tag.find("span", {"class": ["hide phpunixtime"]})).text[0:10])))
-        gameformat = str(tag.find("div", {"class": ["event-tournament-info"]}).text)
+        gameformat = str(tag.find("div", {"class": ["event-tournament-info"]}).text.strip())
         teams = str(tag.find("div", {"class": ["team-home"]}).text.strip()) + " vs " + str(tag.find("div", {"class": ["team-away"]}).text.strip())
-        upcomingmatches.append(timestamp + gameformat + teams)
+        upcomingmatches.append(timestamp + '\t' + gameformat + '\t' + teams)
 str2 = '\n'.join(upcomingmatches)
 
 resTag = b.find_all("div", {"id": "finished"})
@@ -35,7 +40,7 @@ for tag in resTag:
         timestamp = str(datetime.datetime.fromtimestamp(float((tag.find("span", {"class": ["hide phpunixtime"]})).text[0:10])))
         score = str(tag.find("span", {"class": ["home-runningscore"]}).text) + ":" + str(tag.find("span", {"class": ["away-runningscore"]}).text)
         teams = str(tag.find("div", {"class": ["team-home"]}).text.strip()) + " vs " + str(tag.find("div", {"class": ["team-away"]}).text.strip())
-        finishedmatches.append(timestamp + " " + score + " " + teams)
+        finishedmatches.append(timestamp + '\t' + score + '\t' + teams)
 str3 = '\n'.join(finishedmatches)
 
 print('Live matches:\n' + str1 + '\n')
