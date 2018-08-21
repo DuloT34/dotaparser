@@ -43,6 +43,17 @@ for tag in resTag:
         finishedmatches.append(timestamp + '\t' + score + '\t' + teams)
 str3 = '\n'.join(finishedmatches)
 
-print('Live matches:\n' + str1 + '\n')
-print('Upcoming matches:\n' + str2 + '\n')
-print('Finished matches:\n' + str3)
+if str1 and str1.strip():
+    print('Live matches:\n' + str1 + '\n')
+else:
+    print('Live matches:\n' + "No live matches" +'\n')
+
+if str2 and str2.strip():
+    print('Upcoming matches:\n' + str2 + '\n')
+else:
+    print('Upcoming matches:\n' + "No upcoming matches" +'\n')
+
+if str3 and str3.strip():
+    print('Finished matches:\n' + str3)
+else:
+    print('Finished matches:\n' + "No recent results" +'\n')
